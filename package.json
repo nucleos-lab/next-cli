@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/nucleos-lab/next-cli#readme",
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "vorpal": "1.12.0"
   }
 }
