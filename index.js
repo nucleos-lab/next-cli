@@ -1,4 +1,5 @@
 const vorpal = require('vorpal')();
+var mkdirp = require('mkdirp');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,6 +23,29 @@ const options = {
     // heroku: false,
 };
 
+
+function createFile(args, v) {
+    self = v;
+    self.log("--- creating " + args.type +" " + args.name + " ---");
+    if (!fs.existsSync(args.type + "s")) {
+        mkdirp(args.type + "s", function (err) {
+            if (err) {this.error(err)}
+            else{
+                self.log(' directory ' + args.type + ' created')
+            }
+        });
+    }
+
+    if (fs.existsSync(args.type + 's/' + args.name + '.js')) {
+        self.log(' files already exists');
+    } else{
+        self.log(' files created')
+        fs.appendFile(args.type + 's/' + args.name + '.js', 'Hello content!', function (err) {
+            if (err) throw err;
+        });
+    }
+}
+
 vorpal
     .command('init', 'Initialize a new project')
     .action( function (args, done) {
@@ -29,7 +53,16 @@ vorpal
     });
 
 vorpal
-    .command('create <type>', 'Add a new react element to the project');
+    .command('create <type> [name]', 'Add a new react element to the project')
+    .action( function (args, done) {
+        const self = this;
+        if(args.type === "page" || args.type ===  "component" || args.type ===  "screen"){
+           createFile(args, self)
+        }
+        else {
+            this.log("type non connu");
+        }
+    });
 
 vorpal
     .command('add <type>', 'Add a new element to the project');
