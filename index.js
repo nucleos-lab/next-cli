@@ -5,6 +5,9 @@ const path = require('path');
 const dirname = __dirname.split('\\');
 let project_name = dirname[dirname.length - 1];
 
+// Templates
+const json = require('./templates/package');
+
 const options = {
     project_name,
     dynamic: false,
