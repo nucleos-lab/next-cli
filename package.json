@@ -1,0 +1,32 @@
+{
+  "name": "next-cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nucleos-lab/next-cli.git"
+  },
+  "author": "montmirail",
+  "contributors": [
+    {
+      "name": "Montmirail",
+      "url": "https://github.com/orgs/nucleos-lab/people/montmirail"
+    },
+    {
+      "name": "Simon Baehler",
+      "url": "https://github.com/orgs/nucleos-lab/people/simon-baehler"
+    }
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nucleos-lab/next-cli/issues"
+  },
+  "homepage": "https://github.com/nucleos-lab/next-cli#readme",
+  "dependencies": {
+    "vorpal": "1.12.0"
+  }
+}
