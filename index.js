@@ -89,8 +89,7 @@ vorpal
             options.ga = ga;
 
             if(options.ga) {
-                // Available Language
-                // @TODO Re ask until correct api key
+                // Google Analytics API key
                 let pass = false;
 
                 do {
