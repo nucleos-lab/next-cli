@@ -1,5 +1,5 @@
 const vorpal = require('vorpal')();
-var mkdirp = require('mkdirp');
+const mkdirp = require('mkdirp');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,6 +8,7 @@ let project_name = dirname[dirname.length - 1];
 
 // Templates
 const json = require('./templates/package');
+const server = require('./templates/server');
 
 const options = {
     project_name,
@@ -30,6 +31,7 @@ const options = {
 function createFile(args, v) {
     self = v;
     self.log("--- creating " + args.type +" " + args.name + " ---");
+
     if (!fs.existsSync(args.type + "s")) {
         mkdirp(args.type + "s", function (err) {
             if (err) {this.error(err)}
@@ -42,11 +44,73 @@ function createFile(args, v) {
     if (fs.existsSync(args.type + 's/' + args.name + '.js')) {
         self.log(' files already exists');
     } else{
-        self.log(' files created')
+        self.log(' files created');
         fs.appendFile(args.type + 's/' + args.name + '.js', 'Hello content!', function (err) {
             if (err) throw err;
         });
     }
+}
+
+async function createProject(options) {
+    const file = json(options);
+    const serverFile = server(options);
+
+    await mkdirp(`${__dirname}/src`, err => {
+        console.log('✔ Src folder');
+    });
+
+    console.log('\n');
+
+    mkdirp(`${__dirname}/src/static`, err => {
+        console.log('✔ Static folder');
+    });
+
+    mkdirp(`${__dirname}/src/pages`, err => {
+        console.log('✔ Pages folder');
+    });
+
+    mkdirp(`${__dirname}/src/components`, err => {
+        console.log('✔ Components folder');
+    });
+
+    if(options.redux) {
+        mkdirp(`${__dirname}/src/store`, err => {
+            console.log('✔ Store folder');
+
+            mkdirp(`${__dirname}/src/store/actions`, err => {
+                console.log('✔ Actions folder');
+            });
+
+            mkdirp(`${__dirname}/src/reducers`, err => {
+                console.log('✔ Reducers folder');
+            });
+
+            fs.copyFile(`${__dirname}/templates/store/createStore.js`, `${__dirname}/src/store/createStore.js`, err => {
+                if(err)
+                    console.log(err);
+                else
+                    console.log('✔ store/createStore.js');
+            });
+        });
+    }
+
+    if(options.test_suit) {
+        mkdirp(`${__dirname}/src/tests`, err => {
+            console.log('✔ Tests folder');
+        });
+    }
+
+    fs.writeFile(`${__dirname}/src/package.json`, file, err => {
+        console.log('✔ Package.json');
+    });
+
+    fs.copyFile(`${__dirname}/templates/.gitignore`, `${__dirname}/src/.gitignore`, err => {
+        console.log('✔ .gitignore');
+    });
+
+    fs.writeFile(`${__dirname}/src/server.js`, serverFile, err => {
+        console.log('✔ Server.js');
+    });
 }
 
 vorpal
@@ -194,9 +258,10 @@ vorpal
             });
             options.docker = docker;
 
-            this.log(options);
-        } catch(e) {
+            await createProject(options);
 
+        } catch(e) {
+            console.log(e)
         }
     });
 
