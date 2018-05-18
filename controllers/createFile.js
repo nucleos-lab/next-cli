@@ -1,10 +1,7 @@
-const vorpal = require('vorpal')();
 var mkdirp = require('mkdirp');
 const fs = require('fs');
-const path = require('path');
 
 const dirname = __dirname.split('\\');
-let project_name = dirname[dirname.length - 1];
 
 // Templates
 const newClassTemplate = require('../templates/newClassTemplate');
@@ -22,14 +19,14 @@ module.exports = (args, v) => {
         });
     }
 
-    if (fs.existsSync(args.type + 's/' + args.name + '.js')) {
+    if (fs.existsSync(args.type + 's/' + capitalizeFirstLetter(args.name) + '.js')) {
         self.log(' files already exists');
     } else{
         self.log(' files created');
-        const _newClassTemplate = newClassTemplate({name: args.name});
+        const _newClassTemplate = newClassTemplate({name: capitalizeFirstLetter(args.name)});
         if(args.options.class)
         {
-            fs.appendFile('src/' + args.type + 's/' + args.name + '.js', _newClassTemplate, function (err) {
+            fs.appendFile('src/' + args.type + 's/' + capitalizeFirstLetter(args.name) + '.js', _newClassTemplate, function (err) {
                 if (err) throw err;
             });
         }
@@ -39,5 +36,9 @@ module.exports = (args, v) => {
                 if (err) throw err;
             });
         }
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 }

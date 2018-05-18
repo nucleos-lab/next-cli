@@ -1,10 +1,28 @@
 module.exports = options => (
-    `class ${options.name} extends component
+`import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+
+class ${options.name} extends Component
+{
+    constructor()
     {
-        constructor()
-        {
-            super(props)
-        }
+        super(props)
     }
-    `
+    render() {
+        return(
+            <div>
+            </div>
+        );
+    }
+}
+
+${options.name}.propTypes = {
+};
+
+${options.name}.defaultProps = {
+};
+
+export default ${options.name};
+`
 );
