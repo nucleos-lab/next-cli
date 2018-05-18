@@ -42,10 +42,20 @@ function createFile(args, v) {
     if (fs.existsSync(args.type + 's/' + args.name + '.js')) {
         self.log(' files already exists');
     } else{
-        self.log(' files created')
-        fs.appendFile(args.type + 's/' + args.name + '.js', 'Hello content!', function (err) {
-            if (err) throw err;
-        });
+        self.log(' files created');
+        if(args.options.class)
+        {
+            fs.appendFile(args.type + 's/' + args.name + '.js', 'class', function (err) {
+                if (err) throw err;
+            });
+        }
+        else
+        {
+            fs.appendFile(args.type + 's/' + args.name + '.js', 'component', function (err) {
+                if (err) throw err;
+            });
+        }
+
     }
 }
 
@@ -202,13 +212,14 @@ vorpal
 
 vorpal
     .command('create <type> [name]', 'Add a new react element to the project')
+    .option('-c, --class', 'create class')
     .action( function (args, done) {
         const self = this;
         if(args.type === "page" || args.type ===  "component" || args.type ===  "screen"){
            createFile(args, self)
         }
         else {
-            this.log("type non connu");
+            this.log("Unknown command");
         }
     });
 
