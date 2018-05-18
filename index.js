@@ -31,22 +31,6 @@ const options = {
 };
 
 
-function createFile(args, v) {
-    self = v;
-    self.log("--- creating " + args.type +" " + args.name + " ---");
-    if (!fs.existsSync(args.type + "s")) {
-        mkdirp(args.type + "s", function (err) {
-            if (err) {this.error(err)}
-            else{
-                self.log(' directory ' + args.type + ' created')
-            }
-        });
-    }
-
-
-    }
-}
-
 vorpal
     .command('init', 'Initialize a new project')
     .action( async function (args, done) {
