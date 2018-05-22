@@ -30,6 +30,74 @@ const options = {
     // heroku: false,
 };
 
+async function createProject(options) {
+    const file = json(options);
+    const serverFile = server(options);
+
+    await mkdirp(`${__dirname}/src`, err => {
+        console.log('✔ Src folder');
+    });
+
+    console.log('\n');
+
+    mkdirp(`${__dirname}/src/static`, err => {
+        console.log('✔ Static folder');
+    });
+
+    mkdirp(`${__dirname}/src/pages`, err => {
+        console.log('✔ Pages folder');
+
+        if(options.redux) {
+            mkdirp(`${__dirname}/src/store`, err => {
+                console.log('✔ Store folder');
+
+                mkdirp(`${__dirname}/src/store/actions`, err => {
+                    console.log('✔ Actions folder');
+                });
+
+                mkdirp(`${__dirname}/src/reducers`, err => {
+                    console.log('✔ Reducers folder');
+                });
+
+                fs.copyFile(`${__dirname}/templates/store/createStore.js`, `${__dirname}/src/store/createStore.js`, err => {
+                    if(err)
+                        console.log(err);
+                    else
+                        console.log('✔ store/createStore.js');
+                });
+
+                fs.copyFile(`${__dirname}/templates/pages/_app.js`, `${__dirname}/src/pages/_app.js`, err => {
+                    if(err)
+                        console.log(err);
+                    else
+                        console.log('✔ pages/_app.js');
+                });
+            });
+        }
+    });
+
+    mkdirp(`${__dirname}/src/components`, err => {
+        console.log('✔ Components folder');
+    });
+
+    if(options.test_suit) {
+        mkdirp(`${__dirname}/src/tests`, err => {
+            console.log('✔ Tests folder');
+        });
+    }
+
+    fs.writeFile(`${__dirname}/src/package.json`, file, err => {
+        console.log('✔ Package.json');
+    });
+
+    fs.copyFile(`${__dirname}/templates/.gitignore`, `${__dirname}/src/.gitignore`, err => {
+        console.log('✔ .gitignore');
+    });
+
+    fs.writeFile(`${__dirname}/src/server.js`, serverFile, err => {
+        console.log('✔ Server.js');
+    });
+}
 
 vorpal
     .command('init', 'Initialize a new project')
